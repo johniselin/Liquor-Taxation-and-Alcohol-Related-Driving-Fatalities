@@ -1,7 +1,7 @@
 ### Liquor-Taxation-and-Alcohol-Related-Driving-Fatalities
 ### Robert McClelland and John Iselin
 
-In this research we will examine the effects of two separateincreases in Illinois’ excise tax on liquor, one increase in 
+In this research we will examine the effects of two separate increases in Illinois’ excise tax on liquor, one increase in 
 2000 and a second increase in 2009 on alcohol-related driving fatalities. This read-me file explains both the construction 
 of the dataset we will use and how we will estimate our model. Specifically, it will walk users through the file layout, downloading 
 of related data, and use of two sets of Stata do-files. 

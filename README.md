@@ -39,7 +39,7 @@ drivers (drivers_alcohol).
 #### File Layout
 
 The do files and data files attached can be placed into the following set of folders (the set of folders
-under "synth" below are created automatically by the do-file "setup.do":
+under "synth" below are created automatically by the do-file "setup.do"):
 
 * Dataset Construction 
   * *All Dataset Construction do-files*

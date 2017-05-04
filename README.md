@@ -11,7 +11,7 @@ Diamond, and Hainmuller (2010). For more information, please see:
 
 [Synthetic Control Method](http://www.taxpolicycenter.org/publications/synthetic-control-method-tool-understand-state-policy )
 
-For the 2000 tax change, there will be two versions of the model. First, there are two dependent variables, the share of total accidents 
+For the both the 2000 and 2009 tax change, there will be two versions of the model. First, there are two dependent variables, the share of total accidents 
 with BAC values over 0.08 (share_alcohol) and the total number of accidents with BAC values over 0.08 divided by the number of
 drivers (drivers_alcohol). 
 
@@ -28,14 +28,18 @@ drivers (drivers_alcohol).
 * "Dataset Construction - SEM Unemployment.do"
 * "State Names.dta"
 * "alcohol.dta"
-* "synth_preestimation.do"
-* "synth_model.do"
-* "synth_postestimation.do"
-
+* "setup.do"
+* "synth_preestimation_2000.do"
+* "synth_model_2000.do"
+* "synth_postestimation_2000.do"
+* "synth_preestimation_2009.do"
+* "synth_model_2009.do"
+* "synth_postestimation_2009.do"
 
 #### File Layout
 
-The do files and data files attached can be placed into the following set of folders:
+The do files and data files attached can be placed into the following set of folders (the set of folders
+under "synth" below are created automatically by the do-file "setup.do":
 
 * Dataset Construction 
   * *All Dataset Construction do-files*
@@ -192,9 +196,16 @@ We downloaded National Data, Table 2.3.4. Price Indexes for Personal Consumption
 
 #### Synthetic Control Model + Pre- and Post-Estimation
 
-After setting up the folders as outlined above, you can run through the do-files in turn. 
+After setting up the folders as outlined above by using "setup", you can run through the do-files in turn. 
 It is important to not run them one after another, mainly because the results of the first 
-affect the second, and the results of the second affect the third. 
+affect the second, and the results of the second affect the third. The file discriptions are the same for both 
+2000 and 2009 (the only changes are the dates of the treatment). A note of caution - the 2009 policy is only applicable 
+to the synthetic control method if you find no effect of the policy shock of 2000. 
+
+##### "setup.do"
+
+This do-file creates the folders used in the synth preestimation, model, and postestimation steps. Running it first
+allows you to run cleanly through the later do-files without concern for mixing up folders. 
 
 ##### “synth_preestimation.do”
 

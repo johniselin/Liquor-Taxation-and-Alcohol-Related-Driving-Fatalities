@@ -33,6 +33,7 @@ An additional study will be preformed in a later iteration of this project that 
 * "Dataset Construction - PCE Deflator.do" 
 * "Dataset Construction - SEM Unemployment.do"
 * "State Names.dta"
+* "counties.dta"
 * "alcohol.dta"
 * "alcohol_noborders.dta"
 * "synth_setup.do"
@@ -50,7 +51,8 @@ The do files and data files attached can be placed into the following set of fol
 * Dataset Construction 
   * *All Dataset Construction do-files*
   * FARS Data (NBER)
-    * State Names.dta"
+    * "State Names.dta"
+    * "counties.dta"
   * Personal Income (BEA)
   * Age Brackets (CDC)
   * Mortality (CDC)
@@ -208,6 +210,10 @@ This file imports and cleans BEA data on a price index based on personal consump
 This file operates within the "PCE Deflator (BEA)" folder and creates an Excel file and Stata file: "PCE 1982-2015.dta" and "Price Index - PCE (1982-2015).xlsx".
 
 We downloaded National Data, Table 2.3.4. Price Indexes for Personal Consumption Expenditures by Major Type of Product, All years. We use the total for all goods and services Price Index. 
+
+##### "State Names.dta" and "counties.dta"
+
+The "State Names.dta" data files contains state names, abbreviations, and numerical codes to allow for matching of different datasets. The "counties.dta" file is a list of all IL counties with a border dummy equal to one if that county borders another state and 0 if not. 
 
 #### Synthetic Control Model + Pre- and Post-Estimation
 

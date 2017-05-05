@@ -11,12 +11,18 @@ Diamond, and Hainmuller (2010). For more information, please see:
 
 [Synthetic Control Method](http://www.taxpolicycenter.org/publications/synthetic-control-method-tool-understand-state-policy )
 
-For the both the 2000 and 2009 tax change, there will be two versions of the model. First, there are two dependent variables, the share of total accidents 
+For the both the 2000 and 2009 tax change, we will use two different dependent variables: the share of total accidents 
 with BAC values over 0.08 (share_alcohol) and the total number of accidents with BAC values over 0.08 divided by the number of
 drivers (drivers_alcohol). 
 
+When ussing the synthetic control method, an important assumption of the model is that there has been no similar policy shock in 
+the pre-treatment period. This means that our study must proceed chronologically. We have to first test to see if there was an effect of the 2000 tax increase. If no effect is found, we can then proceed to test the second, larger 2009 tax increase. 
+
+An additional study will be preformed in a later iteration of this project that tests the effect of the policy using the same synthetic control method with the same specifications, but subsitutes in values of IL without counties boardering other states. The "alcohol_noborders.dta" data file below will be used for that purpose. 
+
 #### Contents 
 
+* "Dataset Construction - Setup.do"
 * "Dataset Construction - Master.do"
 * "Dataset Construction - FARS.do"
 * "Dataset Construction - BEA.do"
@@ -28,18 +34,18 @@ drivers (drivers_alcohol).
 * "Dataset Construction - SEM Unemployment.do"
 * "State Names.dta"
 * "alcohol.dta"
-* "setup.do"
+* "alcohol_noborders.dta"
+* "synth_setup.do"
 * "synth_preestimation_2000.do"
 * "synth_model_2000.do"
 * "synth_postestimation_2000.do"
-* "synth_preestimation_2009.do"
-* "synth_model_2009.do"
-* "synth_postestimation_2009.do"
+* "mc_share.do"
+* "Sensitivity Analysis.xlsx"
+
 
 #### File Layout
 
-The do files and data files attached can be placed into the following set of folders (the set of folders
-under "synth" below are created automatically by the do-file "setup.do"):
+The do files and data files attached can be placed into the following set of folders. Create the two folders "Dataset Construction" and "Synth", after which time the two setup files ("Dataset Construction - Setup.do" and "synth_setup.do") will create the rest. After that, place under "synth" below are created automatically by the do-file "setup.do"):
 
 * Dataset Construction 
   * *All Dataset Construction do-files*
@@ -53,10 +59,13 @@ under "synth" below are created automatically by the do-file "setup.do"):
   * PCE Deflator (BEA)
   * Unemployment (SEM)
 * Synth
-  * "synth_preestimation.do"
-  * “synth_model.do”
-  * “synth_postestimation.do”
+  * "synth_setup.do"
+  * "synth_preestimation_2000.do"
+  * “synth_model_2000.do”
+  * “synth_postestimation_2000.do”
+  * "mc_share.do"
   * “alcohol.dta”
+  * "alcohol_noborders.dta"
   * IL 2000 - share - narrow
     * preestimation tests
     * placebo tests
@@ -75,6 +84,10 @@ under "synth" below are created automatically by the do-file "setup.do"):
     * postestimation tests	
 
 #### Dataset Construction Do-Files
+
+* "Dataset Construction - Setup.do"
+
+This Do-File creates the filepaths necessary to run the dataset contruction process. After running this, you will need to place the required downloaded data in the correct folders. 
 
 * "Dataset Construction - Master.do"
 
@@ -108,7 +121,9 @@ gasolinetax_deflated | gasolinetax deflated by cpi | 1734 | 25.493 | 6.616087 | 
 
 This do-file calls up 8 separate do files, each of which operates in its own folder. Before running the do-file, 
 make sure that all the file paths are correct and the following instructions for downloading data from online are 
-followed, with the downloaded data files sitting in the correct folder. 
+followed, with the downloaded data files sitting in the correct folder. Because this do-file also automatically places a final version of the dataset in the folder where the model will be run, make sure that file extention exists as well. 
+
+This file also creates "alcohol_noborders.dta", which is identical to "alcohol.dta", but with the IL dependent variables calculated using only driving fatalities from internal counties in IL. 
 
 ##### "Dataset Construction - FARS.do" 
 
@@ -202,12 +217,18 @@ affect the second, and the results of the second affect the third. The file disc
 2000 and 2009 (the only changes are the dates of the treatment). A note of caution - the 2009 policy is only applicable 
 to the synthetic control method if you find no effect of the policy shock of 2000. 
 
-##### "setup.do"
+##### "synth_setup.do"
 
 This do-file creates the folders used in the synth preestimation, model, and postestimation steps. Running it first
 allows you to run cleanly through the later do-files without concern for mixing up folders. 
 
-##### “synth_preestimation.do”
+##### "mc_share.do"
+
+Before using the synthetic control method on our dataset, it is importatnt to make sure that it (the method) could actually detect some standard shock - in essense, is there enough "power" in the combination of model and data to detect an effect. We select an effect size from the existing literature (Wagoner et al (2015) found a 26% reduction in alchohol motor vehicle fatalities in IL) and use the Monte Carlo method to determine if - when we simulate both a null effect of that policy and a 26% effect of that policy - our methodology and data can detect the difference. We first establish a benchmark by calculating 1,000 Monte Carlo simulations in which there is no treatment. In each iteration of the Monte Carlo a simulated state is created such that the share of auto fatalities in each year is the average from the donor pool plus two zero mean random variables: S(t) = d(t) + u(i) + e(it), where S(t) is the share in the simulated state in year t, d(t) is the average share in the donor pool in year t, u(i) is the fixed effect from a randomly drawn state and e(it) is a normally distributed error term with zero mean and the same standard deviation as the residual in the two-way fixed effect model. A synthetic control for the simulated state is then created using all lags of the outcome variable in the pre-treatment period. Finally, for each simulation the ratio of the post-treatment RMSPE to pre-treatment RMSPE is calculated. We then repeat the process on an additional 1,000 simulations, but create a treatment effect equal to the 26 percent decline found in Wagoner et al (2015) by multiplying the share of auto fatalities linked to alcohol in the post-treatment years by 0.74.
+
+We will examine power by following Abadie et al (2015) in calculating the ratio of the RMSPE before and after the putative treatment. If the synthetic control method detects a treatment effect, we would expect the RMSPE after the treatment to greatly exceed the RMSPE before the treatment (Even without treatment we would expect the RMSPE in the post-treatment period to somewhat exceed the RMSPE in the pre-treatment period because a synthetic control is created by choosing states that minimize the RMSPE in the pre-treatment period.)
+
+##### “synth_preestimation_2000.do”
 
 This do-file has two main parts. First, it takes the “alcohol.dta” dataset and transforms it into four files, 
 two for each version of the model we will be running. For the 2000 IL tax change, there will be two versions 
@@ -233,7 +254,7 @@ Note: This file is organized without loops, mainly due to the need to label figu
 major changes, you will have to check 8 places – 4 models * 2 sections. 
 
 
-##### “synth_model.do”
+##### “synth_model_2000.do”
 
 This file takes the datasets created in synth_preestimation and runs through our model. The model is run twice for each 
 version of the data (described above) - once with all pre-treatment dependent variable lags, and once with our selected 
@@ -252,7 +273,7 @@ simply have to change the locals listed at the top.
 Note: The donor states actually used in each version of the model and their weights are captured in a dataset at the end of 
 this do-file. 
 
-##### “synth_postestimation.do”
+##### “synth_postestimation_2000.do”
 
 This do-file is the third of three. This file takes the datasets created in synth_preestimation and runs through a series 
 of post-estimation tests for each version of the data. The tests are as follows. First, we vary the lags used in the model 
@@ -264,4 +285,10 @@ control boards.
 
 Note: This file loops over the four model/donor pool combinations, so to change the variables or states in the model you 
 simply have to change the locals listed at the top.
+
+
+##### "Sensitivity Analysis.xlsx"
+
+This excel file is configured to create a set of figures based on the placebo test results and the post-estimation test results. Simply follow the READ ME tab and copy the correct data into the file to create the figures needed to assess the preformance of the sythentic control method. 
+
 

@@ -38,7 +38,7 @@ log using "synth_montecarlo", replace
 
 
 ** Local Variables used in MC
-local size 100
+local size 1000
 local effect 0.74
 
 
@@ -108,11 +108,14 @@ mat post_PE=PE[.,colnumb(PE,"1999")+1..colsof(PE)]
 		
 mat pre_MSPE=vecdiag(pre_PE*pre_PE')/colsof(pre_PE)
 mat post_MSPE=vecdiag(post_PE*post_PE')/colsof(post_PE)
+
+mata: post_MSPE = st_matrix("post_MSPE")
 		
 mata: rat_MSPE = st_matrix("post_MSPE"):/st_matrix("pre_MSPE")
 mata: rat_RMSPE=rat_MSPE:^5
 
 mata: st_matrix("rat_RMSPE_null",rat_RMSPE')
+mata: st_matrix("post_MSPE_null",post_MSPE')
 mat list rat_RMSPE_null
 		
 		
@@ -145,21 +148,53 @@ mat post_PE=PE[.,colnumb(PE,"1999")+1..colsof(PE)]
 		
 mat pre_MSPE=vecdiag(pre_PE*pre_PE')/colsof(pre_PE)
 mat post_MSPE=vecdiag(post_PE*post_PE')/colsof(post_PE)
+
+mata: post_MSPE = st_matrix("post_MSPE")
 		
 mata: rat_MSPE = st_matrix("post_MSPE"):/st_matrix("pre_MSPE")
 mata: rat_RMSPE=rat_MSPE:^5
 
 mata: st_matrix("rat_RMSPE",rat_RMSPE')
+mata: st_matrix("post_MSPE",post_MSPE')
 mat list rat_RMSPE
 		
 
+
 ** Print results of matric and show summary statistics
+** Compare Ratio of RMSPE for null and treated simulations by size of sample
+*** This method is problematic because if the pre-treatment period is well-
+*** fitted the denominator will be very close to zero. 
+** Compare post-treatment MSPE for null and treated simulations
+*** we can then compare the distribution of the null and treated. 
 
 clear
 svmat rat_RMSPE
+svmat post_MSPE
 svmat rat_RMSPE_null
+svmat post_MSPE_null
+
 
 sum, d
+
+forvalues x = 1/10 { 
+sum rat_RMSPE_null1 if _n <= `size'/10 * `x', d
+matrix  sum_null = nullmat(sum_null) \ r(mean),r(sd),r(skewness),r(kurtosis)'
+sum rat_RMSPE1 if _n <= `size'/10 * `x', d
+matrix  sum = nullmat(sum) \ r(mean),r(sd),r(skewness),r(kurtosis)'
+
+}
+
+
+local rows 100 200 300 400 500 600 700 800 900 1000
+local columns mean sd skewness kurtosis
+mat rownames sum = `rows'
+mat colnames sum =`columns'
+mat rownames sum_null = `rows'
+mat colnames sum_null =`columns'
+
+mat list sum
+mat list sum_null
+
 
 qui: save mc_power, replace
 clear

@@ -22,7 +22,7 @@ values of the dependent variables we should use.
 Please refer to the READ ME file before running this do-file to be sure that
 folders and datasets are correctly organized. 
 
-For the 2000 IL tax change, there will be two versions of the model, one for 
+For the 2009 IL tax change, there will be two versions of the model, one for 
 each dependent variable: the share of total accidents with BAC values over 0.08 
 (share_alcohol) and the total number of accidents with BAC values over 0.08 
 divided by the number of drivers (drivers_alcohol). For each of these dependent 
@@ -53,22 +53,22 @@ if regexm(c(os),"Mac") == 1 {
 
 
 if regexm(c(os),"Mac") == 1 {
-	local mypath_share_narrow = "`mypath'/IL 2000 - share - narrow/"
-	local mypath_share_controls = "`mypath'/IL 2000 - share - controls/"
-	local mypath_drivers_narrow = "`mypath'/IL 2000 - drivers - narrow/"
-	local mypath_drivers_controls = "`mypath'/IL 2000 - drivers - controls/"
+	local mypath_share_narrow = "`mypath'/IL 2009 - share - narrow/"
+	local mypath_share_controls = "`mypath'/IL 2009 - share - controls/"
+	local mypath_drivers_narrow = "`mypath'/IL 2009 - drivers - narrow/"
+	local mypath_drivers_controls = "`mypath'/IL 2009 - drivers - controls/"
 	
 	}
 	else if regexm(c(os),"Windows") == 1 {
-	local mypath_share_narrow = "`mypath'\IL 2000 - share - narrow\"
-	local mypath_share_controls = "`mypath'\IL 2000 - share - controls\"
-	local mypath_drivers_narrow = "`mypath'\IL 2000 - drivers - narrow\"
-	local mypath_drivers_controls = "`mypath'\IL 2000 - drivers - controls\"
+	local mypath_share_narrow = "`mypath'\IL 2009 - share - narrow\"
+	local mypath_share_controls = "`mypath'\IL 2009 - share - controls\"
+	local mypath_drivers_narrow = "`mypath'\IL 2009 - drivers - narrow\"
+	local mypath_drivers_controls = "`mypath'\IL 2009 - drivers - controls\"
 	}
 
 	
 cd "`mypath'"
-log using "synth_alcohol_preestimation_2000", replace
+log using "synth_alcohol_preestimation_2009", replace
 
 global st_control AL UD IA ME MI MS MT NH NC OH OR PA UT VT VA WA WV WY
 global st_tax DE NM NY RI CA 
@@ -87,7 +87,7 @@ de
 
 ** 1. Create Datasets ***
 
-*** Version 1: IL 2000 treatment with share_alcohol dependent variable
+*** Version 1: IL 2009 treatment with share_alcohol dependent variable
 *** 			 Drop control states, high-tax states, and never-use states
 
 
@@ -114,7 +114,7 @@ quietly: save "`mypath_share_narrow'alcohol_share_narrow.dta", replace
 clear
 
 
-*** Version 2: IL 2000 treatment with share_alcohol dependent variable 
+*** Version 2: IL 2009 treatment with share_alcohol dependent variable 
 *** 			 Drop high-tax states and never-use states, but retain control states
 
 sysuse alcohol
@@ -137,7 +137,7 @@ quietly: save "`mypath_share_controls'alcohol_share_controls.dta", replace
 clear
 
 
-*** Version 3: IL 2000 treatment with drivers_alcohol dependent variable 
+*** Version 3: IL 2009 treatment with drivers_alcohol dependent variable 
 *** 			 Drop control states, high-tax states and never-use states
 ***				 Drop 2015 because of missing Driver Data
 
@@ -165,7 +165,7 @@ quietly: save "`mypath_drivers_narrow'alcohol_drivers_narrow.dta", replace
 
 clear
 
-*** Version 4: IL 2000 treatment with drivers_alcohol dependent variable 
+*** Version 4: IL 2009 treatment with drivers_alcohol dependent variable 
 *** 			 Drop high-tax states and never-use states, but keep control states,
 ***				 Drop 2015 because of missing Driver Data
 
@@ -206,7 +206,7 @@ di "`vars'"
 use alcohol_`depvar'_`sizevar'
 
 
-tabstat `vars' if year < 2000, statistics(mean) by(statename)
+tabstat `vars' if year < 2009, statistics(mean) by(statename)
 tabstat `vars' if state == 17, statistics(sum) by(year)
 
 
@@ -222,7 +222,7 @@ foreach x of local vars {
 
 separate `x', by(stateabb == "IL")
 
-graph bar (mean) `x'0 `x'1 if year < 2000, ///
+graph bar (mean) `x'0 `x'1 if year < 2009, ///
 	nofill over(stateabb, sort (`x') label(labs( vsmall))) legend(off) xsize(8) ///
 	title ("`x', Average State Values (1982-1999)")
 
@@ -242,10 +242,10 @@ xtline `depvar'_alcohol if state == 0 | state == 17, i(statename) t(year)  overl
 	ytitle("Share of Accidents Due to Alcohol") xsize(8)
 graph export "Alcoholshare_line_2015.pdf", as(pdf) replace
 
-xtline `depvar'_alcohol if state == 0 & year < 2000 | state == 17 & year < 2000, i(statename) t(year)  overlay 	///
-	title ("Share of Accidents Due to Alcohol, US and IL (1982-2000)") 							///
+xtline `depvar'_alcohol if state == 0 & year < 2009 | state == 17 & year < 2009, i(statename) t(year)  overlay 	///
+	title ("Share of Accidents Due to Alcohol, US and IL (1982-2009)") 							///
 	ytitle("Share of Accidents Due to Alcohol") xsize(8)
-graph export "Alcoholshare_line_2000.pdf", as(pdf) replace
+graph export "Alcoholshare_line_2009.pdf", as(pdf) replace
 
 clear
 
@@ -263,7 +263,7 @@ di "`vars'"
 use alcohol_`depvar'_`sizevar'
 
 
-tabstat `vars' if year < 2000, statistics(mean) by(statename)
+tabstat `vars' if year < 2009, statistics(mean) by(statename)
 tabstat `vars' if state == 17, statistics(sum) by(year)
 
 
@@ -279,7 +279,7 @@ foreach x of local vars {
 
 separate `x', by(stateabb == "IL")
 
-graph bar (mean) `x'0 `x'1 if year < 2000, ///
+graph bar (mean) `x'0 `x'1 if year < 2009, ///
 	nofill over(stateabb, sort (`x') label(labs( vsmall))) legend(off) xsize(8) ///
 	title ("`x', Average State Values (1982-1999)")
 
@@ -299,10 +299,10 @@ xtline `depvar'_alcohol if state == 0 | state == 17, i(statename) t(year)  overl
 	ytitle("Share of Accidents Due to Alcohol") xsize(8)
 graph export "Alcoholshare_line_2015.pdf", as(pdf) replace
 
-xtline `depvar'_alcohol if state == 0 & year < 2000 | state == 17 & year < 2000, i(statename) t(year)  overlay 	///
-	title ("Share of Accidents Due to Alcohol, US and IL (1982-2000)") 							///
+xtline `depvar'_alcohol if state == 0 & year < 2009 | state == 17 & year < 2009, i(statename) t(year)  overlay 	///
+	title ("Share of Accidents Due to Alcohol, US and IL (1982-2009)") 							///
 	ytitle("Share of Accidents Due to Alcohol") xsize(8)
-graph export "Alcoholshare_line_2000.pdf", as(pdf) replace
+graph export "Alcoholshare_line_2009.pdf", as(pdf) replace
 
 clear
 
@@ -319,7 +319,7 @@ di "`vars'"
 use alcohol_`depvar'_`sizevar'
 
 
-tabstat `vars' if year < 2000, statistics(mean) by(statename)
+tabstat `vars' if year < 2009, statistics(mean) by(statename)
 tabstat `vars' if state == 17, statistics(sum) by(year)
 
 
@@ -335,7 +335,7 @@ foreach x of local vars {
 
 separate `x', by(stateabb == "IL")
 
-graph bar (mean) `x'0 `x'1 if year < 2000, ///
+graph bar (mean) `x'0 `x'1 if year < 2009, ///
 	nofill over(stateabb, sort (`x') label(labs( vsmall))) legend(off) xsize(8) ///
 	title ("`x', Average State Values (1982-1999)")
 
@@ -355,10 +355,10 @@ xtline `depvar'_alcohol if state == 0 | state == 17, i(statename) t(year)  overl
 	ytitle("Alcohol-Related Accidents per Driver") xsize(8)
 graph export "Alcoholdrivers_line_2015.pdf", as(pdf) replace
 
-xtline `depvar'_alcohol if state == 0 & year < 2000 | state == 17 & year < 2000, i(statename) t(year)  overlay 	///
-	title ("Alcohol-Related Accidents per Driver, US and IL (1982-2000)")			///
+xtline `depvar'_alcohol if state == 0 & year < 2009 | state == 17 & year < 2009, i(statename) t(year)  overlay 	///
+	title ("Alcohol-Related Accidents per Driver, US and IL (1982-2009)")			///
 	ytitle("Alcohol-Related Accidents per Driver") xsize(8)
-graph export "Alcoholdrivers_line_2000.pdf", as(pdf) replace
+graph export "Alcoholdrivers_line_2009.pdf", as(pdf) replace
 
 clear
 
@@ -375,7 +375,7 @@ di "`vars'"
 use alcohol_`depvar'_`sizevar'
 
 
-tabstat `vars' if year < 2000, statistics(mean) by(statename)
+tabstat `vars' if year < 2009, statistics(mean) by(statename)
 tabstat `vars' if state == 17, statistics(sum) by(year)
 
 
@@ -391,7 +391,7 @@ foreach x of local vars {
 
 separate `x', by(stateabb == "IL")
 
-graph bar (mean) `x'0 `x'1 if year < 2000, ///
+graph bar (mean) `x'0 `x'1 if year < 2009, ///
 	nofill over(stateabb, sort (`x') label(labs( vsmall))) legend(off) xsize(8) ///
 	title ("`x', Average State Values (1982-1999)")
 
@@ -411,10 +411,10 @@ xtline `depvar'_alcohol if state == 0 | state == 17, i(statename) t(year)  overl
 	ytitle("Alcohol-Related Accidents per Driver") xsize(8)
 graph export "Alcoholdrivers_line_2015.pdf", as(pdf) replace
 
-xtline `depvar'_alcohol if state == 0 & year < 2000 | state == 17 & year < 2000, i(statename) t(year)  overlay 	///
-	title ("Alcohol-Related Accidents per Driver, US and IL (1982-2000)")			///
+xtline `depvar'_alcohol if state == 0 & year < 2009 | state == 17 & year < 2009, i(statename) t(year)  overlay 	///
+	title ("Alcohol-Related Accidents per Driver, US and IL (1982-2009)")			///
 	ytitle("Alcohol-Related Accidents per Driver") xsize(8)
-graph export "Alcoholdrivers_line_2000.pdf", as(pdf) replace
+graph export "Alcoholdrivers_line_2009.pdf", as(pdf) replace
 
 clear
 

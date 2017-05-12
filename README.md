@@ -41,7 +41,7 @@ An additional study will be preformed in a later iteration of this project that 
 * "synth_model_2000.do"
 * "synth_postestimation_2000.do"
 * "mc_share.do"
-* "Sensitivity Analysis.xlsx"
+* "Analysis_Share.xlsx" and "Analysis_Driver.xlsx"
 
 
 #### File Layout
@@ -60,7 +60,7 @@ The do files and data files attached can be placed into the following set of fol
   * Gas Taxes (FHWA)
   * PCE Deflator (BEA)
   * Unemployment (SEM)
-* Synth
+* Synth (one for each 2000 and 2009)
   * "synth_setup.do"
   * "synth_preestimation_2000.do"
   * “synth_model_2000.do”
@@ -68,6 +68,7 @@ The do files and data files attached can be placed into the following set of fol
   * "mc_share.do"
   * “alcohol.dta”
   * "alcohol_noborders.dta"
+  * "Analysis_Share.xlsx" and "Analysis_Driver.xlsx"
   * IL 2000 - share - narrow
     * preestimation tests
     * placebo tests
@@ -293,8 +294,8 @@ Note: This file loops over the four model/donor pool combinations, so to change 
 simply have to change the locals listed at the top.
 
 
-##### "Sensitivity Analysis.xlsx"
+##### "Analysis_Share.xlsx" and "Analysis_Driver.xlsx"
 
-This excel file is configured to create a set of figures based on the placebo test results and the post-estimation test results. Simply follow the READ ME tab and copy the correct data into the file to create the figures needed to assess the preformance of the sythentic control method. 
+These excel files are set up to recieve output directly from "synth_model.dta" and "synth_postestimation.dta". The files are configured for the two dependent variables, and two versions of each should be created per run: "Analysis_share_narrow.xlsx", "Analysis_share_controls.xlsx", "Analysis_drivers_narrow.xlsx", and "Analysis_drivers_control.xlsx". Each is set up to produce figures for the following: All-lags sythetic control model, selected lags and predictor variable synthetic control model, placebo test with all-lags model, placebo test with selected lags and predictor model, alternative lag test, alternative pre-treatment period test, and leave-one-out test. Some notes: there are some labels and cells that need to be adjusted model to model (sorting correclty and expanding selections for figures as the number of donor state's change, for example. Moving from 2000 to 2009 means adjusting the language slightly, and most importantly, changing the area selected for calculating the RMSE of the pre-treatment period for the placebo tests. 
 
 

@@ -1,8 +1,8 @@
 ### Liquor-Taxation-and-Alcohol-Related-Driving-Fatalities
 ### Robert McClelland and John Iselin
 
-In this research we will examine the effects of two separate increases in Illinois’ excise tax on liquor, one increase in 
-2000 and a second increase in 2009 on alcohol-related driving fatalities. This read-me file explains both the construction 
+In this research we will examine the effects of two separate increases in Illinois’ excise tax on liquor, one increase in July 
+1999 and a second increase in September 2009 on fatal alcohol-related motor vehicle crashes (FARMVC). This read-me file explains both the construction 
 of the dataset we will use and how we will estimate our model. Specifically, it will walk users through the file layout, downloading 
 of related data, and use of two sets of Stata do-files. 
 
@@ -11,8 +11,8 @@ Diamond, and Hainmuller (2010). For more information, please see:
 
 [Synthetic Control Method](http://www.taxpolicycenter.org/publications/synthetic-control-method-tool-understand-state-policy )
 
-For the both the 2000 and 2009 tax change, we will use two different dependent variables: the share of total accidents 
-with BAC values over 0.08 (share_alcohol) and the total number of accidents with BAC values over 0.08 divided by the number of
+For the both the 1999 and 2009 tax change, we will use two different dependent variables: the share of total fatal crashes 
+with BAC values over 0.08 (share_alcohol) and the total number of fatal crashes with BAC values over 0.08 divided by the number of
 drivers (drivers_alcohol). 
 
 When using the synthetic control method, an important assumption of the model is that there has been no similar policy shock in 
@@ -40,13 +40,13 @@ An additional study will be preformed in a later iteration of this project that 
 * "synth_preestimation_2000.do"
 * "synth_model_2000.do"
 * "synth_postestimation_2000.do"
-* "mc_share.do"
-* "Analysis_Share.xlsx" and "Analysis_Driver.xlsx"
-
+* "powertest.do"
+* "Analysis_*depvar_donorpool*.xlsx" 
+ 
 
 #### File Layout
 
-The do files and data files attached can be placed into the following set of folders. Create the two folders "Dataset Construction" and "Synth", after which time the two setup files ("Dataset Construction - Setup.do" and "synth_setup.do") will create the rest. After that, place under "synth" below are created automatically by the do-file "setup.do"):
+The do files and data files attached will be placed in one of two folders you will create: "Dataset Construction" and "Synth", after which time the two setup files ("Dataset Construction - Setup.do" and "synth_setup.do") will create the requisite filepaths. 
 
 * Dataset Construction 
   * *All Dataset Construction do-files*
@@ -60,31 +60,23 @@ The do files and data files attached can be placed into the following set of fol
   * Gas Taxes (FHWA)
   * PCE Deflator (BEA)
   * Unemployment (SEM)
-* Synth (one for each 2000 and 2009)
+* Synth 
   * "synth_setup.do"
   * "synth_preestimation_2000.do"
+  * "synth_preestimation_2010.do"
   * “synth_model_2000.do”
+  * “synth_model_2010.do”
   * “synth_postestimation_2000.do”
-  * "mc_share.do"
+  * “synth_postestimation_2010.do”
+  * "powertest.do"
   * “alcohol.dta”
   * "alcohol_noborders.dta"
-  * "Analysis_Share.xlsx" and "Analysis_Driver.xlsx"
-  * IL 2000 - share - narrow
+  * "Analysis_*depvar_donorpool*.xlsx" (There will be eight of these, one for each combination) 
+  * IL *year* - *depvar* - *donorpool* (There will be eight of these, one for each combination)
     * preestimation tests
     * placebo tests
     * postestimation tests
-  * IL 2000 - share - controls
-    * preestimation tests
-    * placebo tests
-    * postestimation tests
-  * IL 2000 - drivers - narrow
-    * preestimation tests
-    * placebo tests
-    * postestimation tests
-  * IL 2000 - drivers - controls
-    * preestimation tests
-    * placebo tests
-    * postestimation tests	
+  
 
 #### Dataset Construction Do-Files
 
@@ -229,18 +221,17 @@ to the synthetic control method if you find no effect of the policy shock of 200
 This do-file creates the folders used in the synth preestimation, model, and postestimation steps. Running it first
 allows you to run cleanly through the later do-files without concern for mixing up folders. 
 
-##### "mc_share.do"
+##### "powertest.do"
 
 Before using the synthetic control method on our dataset, it is important to make sure that it (the method) could actually detect some standard shock - in essense, is there enough "power" in the combination of model and data to detect an effect. We select an effect size from the existing literature (Wagoner et al (2015) found a 26 percent reduction in alchohol motor vehicle fatalities in IL) and use the Monte Carlo method to determine if - when we simulate both a null effect of that policy and a 26% effect of that policy - our methodology and data can detect the difference. We first establish a benchmark by calculating 1,000 Monte Carlo simulations in which there is no treatment. In each iteration of the Monte Carlo a simulated state is created such that the share of auto fatalities in each year is the average from the donor pool plus two zero mean random variables: S(t) = d(t) + u(i) + e(it), where S(t) is the share in the simulated state in year t, d(t) is the average share in the donor pool in year t, u(i) is the fixed effect from a randomly drawn state and e(it) is a normally distributed error term with zero mean and the same standard deviation as the residual in the two-way fixed effect model. A synthetic control for the simulated state is then created using all lags of the outcome variable in the pre-treatment period. Finally, for each simulation the ratio of the post-treatment RMSPE to pre-treatment RMSPE is calculated. We then repeat the process on an additional 1,000 simulations, but create a treatment effect equal to the 26 percent decline found in Wagoner et al (2015) by multiplying the share of auto fatalities linked to alcohol in the post-treatment years by 0.74.
 
-We examine power by following Abadie et al (2015) in calculating the ratio of the RMSPE before and after the putative treatment. If the synthetic control method detects a treatment effect, we would expect the RMSPE after the treatment to greatly exceed the RMSPE before the treatment (Even without treatment we would expect the RMSPE in the post-treatment period to somewhat exceed the RMSPE in the pre-treatment period because a synthetic control is created by choosing states that minimize the RMSPE in the pre-treatment period.) We explore the power of the synthetic control method in this application by comparing the distributions of the RMSPE ratios calculated from the null and treatment simulations.  
+We examine power by following Abadie et al (2015) in calculating the post-treatment MSPE. We explore the power of the synthetic control method in this application by comparing the distributions of the MSPE calculated from the null and treatment simulations.  
 
-##### “synth_preestimation_2000.do”
+##### “synth_preestimation_2000.do” and “synth_preestimation_2010.do”
 
 This do-file has two main parts. First, it takes the “alcohol.dta” dataset and transforms it into four files, 
-two for each version of the model we will be running. For the 2000 IL tax change, there will be two versions 
-of the model, one for each dependent variable: the share of total accidents with BAC values over 0.08 (share_alcohol) 
-and the total number of accidents with BAC values over 0.08 divided by the number of drivers (drivers_alcohol). For each
+two for each version of the model we will be running. For both tax shocks, there will be two versions 
+of the model, one for each dependent variable: share_alcohol and drivers_alcohol) For each
 of these dependent variables, we run the model over our set of donor states, which is all 50 states plus DC minus states 
 with large liquor tax changes, states with liquor control as opposed to or in addition to taxes, and Alaska, DC, and Hawaii. 
 For sensitivity analysis we also will re-run the models over a second set of donor states where we add back in states with 
@@ -248,11 +239,11 @@ liquor control boards.
 
 Second, it creates a set of pre-estimation figures and tables for each of the two versions of the model (and the sensitivity 
 tests). We estimate each version on two donor pools (the larger pool is part of a sensitivity analysis described below). It 
-shows the average for all the variables in that particular model by state for 1982 – 2000 and the average of all the variables 
+shows the average for all the variables in that particular model by state for 1982 – 1998 and the average of all the variables 
 across time for Illinois. It then creates a bar graph showing the average for all the variables in that particular model by 
-state for 1982 – 2000, to allow us to look for outliers, and situations where IL is an outlier (if that is the case that 
+state for 1982 – 1998, to allow us to look for outliers, and situations where IL is an outlier (if that is the case that 
 variable should not be used in this model). Finally, it plots the dependent variable of the model for IL and the US in the 
-pre-treatment period (1982-2000), and from this figure we can determine which lagged values of the dependent are appropriate 
+pre-treatment period (1982-1998), and from this figure we can determine which lagged values of the dependent are appropriate 
 to include in our model. 
 
 Note: This file will only work if you have the file paths correctly assigned.
@@ -261,14 +252,14 @@ Note: This file is organized without loops, mainly due to the need to label figu
 major changes, you will have to check 8 places – 4 models * 2 sections. 
 
 
-##### “synth_model_2000.do”
+##### “synth_model_2000.do” and “synth_model_2010.do”
 
 This file takes the datasets created in synth_preestimation and runs through our model. The model is run twice for each 
 version of the data (described above) - once with all pre-treatment dependent variable lags, and once with our selected 
 explanatory variables plus lags selected based on our pre-estimation tests. This file also runs the versions through placebo 
-tests, which run each potential donor state through the same model IL was run through, to determine if the IL result is different 
-from that seen in other states. For each of the two models, this do-file also runs through the sensitivity analysis using the 
-larger pool of donor states. 
+tests, which run each potential donor state through the same model IL was run through (both all lags and our chosen model), 
+to determine if the IL result is different from that seen in other states. For each of the two models, this do-file also 
+runs through the sensitivity analysis using the larger pool of donor states. 
 
 The choice of lagged dependent variables for our model comes from the results of the pre-estimation tests, and is listed 
 in the do-file. If you run the pre-estimation tests and decide on a different set, you have to go into the loop and change 
@@ -280,7 +271,9 @@ simply have to change the locals listed at the top.
 Note: The donor states actually used in each version of the model and their weights are captured in a dataset at the end of 
 this do-file. 
 
-##### “synth_postestimation_2000.do”
+Note: We use the placebo test section of this code to check for an effect using an alternative pre-treatment period for the 2000 drivers model. In essence, we detect a potential effect of the tax change if we restrict the pre-treatment period to 1990-1998 (as opposed to 1982-1998) so we run the placebo tests on the narrow and controls donor pools, using a file called "synth_placebo_pretreatment.do" which is attached. 
+
+##### “synth_postestimation_2000.do” and “synth_postestimation_2010.do”
 
 This do-file is the third of three. This file takes the datasets created in synth_preestimation and runs through a series 
 of post-estimation tests for each version of the data. The tests are as follows. First, we vary the lags used in the model 
@@ -294,8 +287,8 @@ Note: This file loops over the four model/donor pool combinations, so to change 
 simply have to change the locals listed at the top.
 
 
-##### "Analysis_Share.xlsx" and "Analysis_Driver.xlsx"
+##### "Analysis_*depvar_donorpool*.xlsx"
 
-These excel files are set up to recieve output directly from "synth_model.dta" and "synth_postestimation.dta". The files are configured for the two dependent variables, and two versions of each should be created per run: "Analysis_share_narrow.xlsx", "Analysis_share_controls.xlsx", "Analysis_drivers_narrow.xlsx", and "Analysis_drivers_control.xlsx". Each is set up to produce figures for the following: All-lags sythetic control model, selected lags and predictor variable synthetic control model, placebo test with all-lags model, placebo test with selected lags and predictor model, alternative lag test, alternative pre-treatment period test, and leave-one-out test. Some notes: there are some labels and cells that need to be adjusted model to model (sorting correclty and expanding selections for figures as the number of donor state's change, for example. Moving from 2000 to 2009 means adjusting the language slightly, and most importantly, changing the area selected for calculating the RMSE of the pre-treatment period for the placebo tests. 
+These excel files are set up to recieve output directly from "synth_model.dta" and "synth_postestimation.dta". There are 8 files, one each for the combination of tax increase year (1999 and 2009)(Note that we use the first full year of the tax increase as the first year of the effect, so the labeling follows 2000 and 2010), the dependent variable (share or driver) and the size of the donor pool (narrow or controls). Each is set up to produce figures for the following: All-lags sythetic control model, selected lags and predictor variable synthetic control model, placebo test with all-lags model, placebo test with selected lags and predictor model, alternative lag test, alternative pre-treatment period test, and leave-one-out test. Some notes: there are some labels and cells that need to be adjusted model to model (sorting correclty and expanding selections for figures as the number of donor state's change, for example. Moving from 2000 to 2009 means adjusting the language slightly, and most importantly, changing the area selected for calculating the RMSE of the pre-treatment period for the placebo tests. 
 
 

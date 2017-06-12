@@ -7,13 +7,17 @@ Illinois Liquor tax increase and alcohol-related accidents.
 Set-Up File Paths
 
 
-We are examining the effect of a 2000 and 2009 Alcohol Tax Increase
+We are examining the effect of a 1999 and 2009 Alcohol Tax Increase
 In Illinois. This set of do-files constructs a dataset and runs 
 through a set of pre- and post-estimation tests and models the
 effects of the tax change using the synthetic control method as 
 described in Abadie, Diamond, and Hainmuller (2010).
 
 This do-file creates the filepaths necessary to run the rest of the code. 
+
+Note: While the tax changes occured in 1999 and 2009, since the first year 
+when the tax change were fully in effect fell in 2000 and 2010, those are 
+the first years of the "treatment".
 
 After running this code, remember to place the do-files and data-sets as 
 specified in the READ-ME file. 
@@ -28,19 +32,17 @@ clear all
 set more off
 
 ** MAC vs PC Filepaths
-if regexm(c(os),"Mac") == 1 {
-	local mypath = "/Users/johniselin/Box Sync/LiquorTax/Data/Synth/"
-	}
-	else if regexm(c(os),"Windows") == 1 local mypath = "D:\Users\JIselin\Box Sync\LiquorTax\Data\Synth\"
+if regexm(c(os),"Mac") == 1 local mypath = "---/"
+else if regexm(c(os),"Windows") == 1 local mypath = "---\"
 
 	
 
 ** Create filepaths
-** Note - Comment out 2009 if you are just running through the 2000 code
+** Note - Comment out 2010 if you are just running through the 2000 code
 
 	local depvar share drivers
 	local sizevar narrow controls
-	local yearvar 2000 2009
+	local yearvar 2000 2010
 
 if regexm(c(os),"Mac") == 1 {
 	

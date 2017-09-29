@@ -1,4 +1,3 @@
-
 /***********************************************************************
 Author: Robert McClelland and John Iselin
 Date: Spring 2017
@@ -57,7 +56,7 @@ set more off
 
 ** MAC vs PC Filepaths
 if regexm(c(os),"Mac") == 1 local mypath = "----/"
-else if regexm(c(os),"Windows") == 1 local mypath = "---\"
+else if regexm(c(os),"Windows") == 1 local mypath = "D:\Users\JIselin\Box Sync\Illinois Alcohol Taxes and Drunk Driving\Results\Synth Run 06.12.2017\"
 
 cd "`mypath'"
 log using "synth_alcohol_poestestimation_2000", replace
@@ -164,7 +163,7 @@ clear
 
 use original_short
 rename _Y_synthetic _original_synth
-local file lags_v2 lags_v3 
+local file lags_v2 lags_v3 lags_smooth
 
 	foreach x of local file {
 	merge 1:1 _time _Y_treated using `x'_short, keepusing(_Y_synthetic)

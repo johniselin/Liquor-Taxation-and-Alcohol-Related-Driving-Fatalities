@@ -51,7 +51,7 @@ set more off
 
 ** MAC vs PC Filepaths
 if regexm(c(os),"Mac") == 1 local mypath = "---/"
-else if regexm(c(os),"Windows") == 1 local mypath = "---\"
+else if regexm(c(os),"Windows") == 1 local mypath = "D:\Users\JIselin\Box Sync\Illinois Alcohol Taxes and Drunk Driving\Results\Synth Run 08.16.2017\"
 
 
 if regexm(c(os),"Mac") == 1 {

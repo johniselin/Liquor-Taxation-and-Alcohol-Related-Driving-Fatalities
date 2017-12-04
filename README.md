@@ -1,9 +1,9 @@
 ### Liquor-Taxation-and-Alcohol-Related-Driving-Fatalities
 ### Robert McClelland and John Iselin
 
-In this research we will examine the effects of two separate increases in Illinois’ excise tax on liquor, one increase in July 
+In this research, we will examine the effects of two separate increases in Illinois’ excise tax on liquor, one increase in July 
 1999 and a second increase in September 2009 on fatal alcohol-related motor vehicle crashes (FARMVC). This read-me file explains both the construction 
-of the dataset we will use and how we will estimate our model. Specifically, it will walk users through the file layout, downloading 
+of the dataset, we will use and how we will estimate our model. Specifically, it will walk users through the file layout, downloading 
 of related data, and use of two sets of Stata do-files. 
 
 We will be using the synthetic control method as described in Abadie, 
@@ -16,43 +16,72 @@ with BAC values over 0.08 (share_alcohol) and the total number of fatal crashes 
 drivers (drivers_alcohol). 
 
 When using the synthetic control method, an important assumption of the model is that there has been no similar policy shock in 
-the pre-treatment period. This means that our study must proceed chronologically. We have to first test to see if there was an effect of the 2000 tax increase. If no effect is found, we can then proceed to test the second, larger 2009 tax increase. 
+the pre-treatment period. This means that our study must proceed chronologically. We must first test to see if there was an effect of the 1999 tax increase. If no effect is found, we can then proceed to test the second, larger 2009 tax increase. As a point of clarification, we refer to the 1999 tax increase as "2000" and the 2009 tax increase as "2010" at several times in the code below. This is because the first year with a full treatment of the higher tax in both cases was the year following enactment. Given the use of annual data, we treat 2000 and 2010 as the first years of treatment (and 1998 and 2008 as the last years of the pre-treatment periods) in the synthetic control method. 
 
-An additional study will be preformed in a later iteration of this project that tests the effect of the policy using the same synthetic control method with the same specifications, but subsitutes in values of IL without counties boardering other states. The "alcohol_noborders.dta" data file below will be used for that purpose. 
+An additional study is preformed that tests the effect of the policy using the same synthetic control method, but substitutes in values of IL without counties bordering other states. The "alcohol_noborders.dta" data file below will be used for that purpose. 
 
 #### Contents 
 
-* "Dataset Construction - Setup.do"
-* "Dataset Construction - Master.do"
-* "Dataset Construction - FARS.do"
-* "Dataset Construction - BEA.do"
-* "Dataset Construction - CDC Age.do"
-* "Dataset Construction - CDC Disease.do"
-* "Dataset Construction - FHWA Drivers.do"
-* "Dataset Construction - FHWA Gas Tax.do"
-* "Dataset Construction - PCE Deflator.do" 
-* "Dataset Construction - SEM Unemployment.do"
-* "State Names.dta"
-* "counties.dta"
-* "alcohol.dta"
-* "alcohol_noborders.dta"
-* "synth_setup.do"
-* "synth_preestimation_2000.do"
-* "synth_model_2000.do"
-* "synth_postestimation_2000.do"
-* "powertest.do"
-* "Analysis_*depvar_donorpool*.xlsx" 
- 
+* data
+  * alcohol.dta
+  * alcohol_noborders.dta
+  * State Names.dta
+  * counties.dta
+* dataset construction 
+  * Dataset Construction - Setup.do
+  * Dataset Construction - Master.do
+  * Dataset Construction - FARS.do
+  * Dataset Construction - BEA.do
+  * Dataset Construction - CDC Age.do
+  * Dataset Construction - CDC Disease.do
+  * Dataset Construction - FHWA Drivers.do
+  * Dataset Construction - FHWA Gas Tax.do
+  * Dataset Construction - PCE Deflator.do
+  * Dataset Construction - SEM Unemployment.do
+* full previous runs
+  * Synth 2000 Run 05.12.2017 (zip)
+  * Synth 2009 Run 05.12.2017 (zip)
+  * Synth Run 08.16.2017 (zip)
+* model
+  * synth_setup.do
+  * powertest.do
+  * synth_preestimation_2000.do
+  * synth_preestimation_2010.do
+  * synth_model_2000.do
+  * synth_model_2010.do
+  * synth_postestimation_2000.do
+  * synth_postestimation_2000.do
+* old material
+  * Alt Pre-Treatment Placebo Test
+  * Analysis_Drivers
+  * Analysis_Share
+  * synth_placebo_pretreatment
+  * synth_model_2009
+  * synth_postestimation_2009
+  * synth_preestimation_2009
+* result files
+  * Analysis_drivers_controls_2000.xlsx
+  * Analysis_drivers_controls_2010.xlsx
+  * Analysis_drivers_narrow_2000.xlsx
+  * Analysis_drivers_narrow_2010.xlsx
+  * Analysis_share_controls_2000.xlsx
+  * Analysis_share_controls_2010.xlsx
+  * Analysis_share_narrow_2000.xlsx
+  * Analysis_share_narrow_2010.xlsx
+* tables and figures - jhe submission
+  * Do alcohol taxes reduce motor vehicle fatalities - Appendix.xlsx
+  * Do alcohol taxes reduce motor vehicle fatalities - Tables and Figures.xlsx
+* tables and figures - tpc publications
+  * Do alcohol excise taxes reduce motor vehicle fatalities - Tables, Figures, and Appendixes
 
 #### File Layout
 
-The do files and data files attached will be placed in one of two folders you will create: "Dataset Construction" and "Synth", after which time the two setup files ("Dataset Construction - Setup.do" and "synth_setup.do") will create the requisite filepaths. 
+The do files and data files attached will be placed in one of two folders you will create: "Dataset Construction" and "Synth", after which time the two setup files ("Dataset Construction - Setup.do" and "synth_setup.do") will create the requisite filepaths. In addition, GSA geographic location codes should be downloaded in an excel file and placed in the FARS data folder: https://www.gsa.gov/portal/content/102761 
 
 * Dataset Construction 
   * *All Dataset Construction do-files*
   * FARS Data (NBER)
-    * "State Names.dta"
-    * "counties.dta"
+    * State Names.dta
   * Personal Income (BEA)
   * Age Brackets (CDC)
   * Mortality (CDC)
@@ -82,7 +111,7 @@ The do files and data files attached will be placed in one of two folders you wi
 
 * "Dataset Construction - Setup.do"
 
-This Do-File creates the filepaths necessary to run the dataset contruction process. After running this, you will need to place the required downloaded data in the correct folders. 
+This Do-File creates the filepaths necessary to run the dataset construction process. After running this, you will need to place the required downloaded data in the correct folders. 
 
 * "Dataset Construction - Master.do"
 
@@ -96,7 +125,7 @@ of 50 states plus DC and the US. A version of this file is saved in the synth fo
 variables to be used in our model:
 
 
-Variable | Discription | Observations | Mean | Std. Dev. | Min | Max 
+Variable | Description | Observations | Mean | Std. Dev. | Min | Max 
 ---|---|---|---|---|---|---
 state | State ID Number | 1768 |28.40385 |16.03127 |0 |56             
 statename | State Name | 0 | . | . | . | .   
@@ -116,9 +145,9 @@ gasolinetax_deflated | gasolinetax deflated by cpi | 1734 | 25.493 | 6.616087 | 
 
 This do-file calls up 8 separate do files, each of which operates in its own folder. Before running the do-file, 
 make sure that all the file paths are correct and the following instructions for downloading data from online are 
-followed, with the downloaded data files sitting in the correct folder. Because this do-file also automatically places a final version of the dataset in the folder where the model will be run, make sure that file extention exists as well. 
+followed, with the downloaded data files sitting in the correct folder. Because this do-file also automatically places a final version of the dataset in the folder where the model will be run, make sure that file extension exists as well. 
 
-This file also creates "alcohol_noborders.dta", which is identical to "alcohol.dta", but with the IL dependent variables calculated using only driving fatalities from internal counties in IL. 
+This file also creates "alcohol_noborders.dta" version with, which is identical to "alcohol.dta", but with the IL dependent variables calculated using only driving fatalities from internal counties in IL (an additional file with only border counties is also created, though the results are not included in our final paper). 
 
 ##### "Dataset Construction - FARS.do" 
 
@@ -175,7 +204,7 @@ For 1979-1998 use "ICD-9 Codes: All". This will create the file "Compressed Mort
 When downloading data from CDC wonder, enter in the following:
 1)	Group Results by “State” then “Year”
 2)	Select all 50 states and DC (do not select “All* (The United States)”)
-3)	Select all options listed for Age Group except the “All Ages” optionk, then “All Years”, “All Genders”. “All Races”, and “All Origins”
+3)	Select all options listed for Age Group except the “All Ages” option, then “All Years”, “All Genders”. “All Races”, and “All Origins”
 4)	Use codes as listed above.
 5)	Choose Export Results, Show Totals, Show Zero Values, and Show Suppressed Values
 
@@ -183,7 +212,7 @@ When downloading data from CDC wonder, enter in the following:
 
 This file imports and cleans FHWA data on gasoline taxes. Data are downloaded from https://www.fhwa.dot.gov/policyinformation/statistics.cfm/
 
-This file operates within the "Gas Taxes (FHWA)" folder and uses the excel Excel files below to create a Stata file with state-year data on gasoline tax rates: "State Motor Fuel Tax 1982-2015.dta".
+This file operates within the "Gas Taxes (FHWA)" folder and uses the excel files below to create a Stata file with state-year data on gasoline tax rates: "State Motor Fuel Tax 1982-2015.dta".
 
 For 1982 through 1995, see “Highway Statistics Summary To 1995”, Section 1: Motor Fuels, State motor fuel taxes and related receipts, 1950-1995 (Table MF-201A) (downloaded as "mf205"). Save this file as "State Motor-Fuel Rates (1981-1995).xlsx". For 1996 through 1999, see the individual Highways Statistics Publications by year, section 1: Motor Fuels: download State tax rates on motor fuel (downloaded as "mf121t" (1996), "mf121t_1997" (1997), "mf121t" (1998 and 1999)). Save these files as "State Motor-Fuel Rates (199Y).xlsx". For 2000 through 2015, use Highway Statistics 2015, table 8.2.3. State tax rates on motor fuel 1998-2015 (downloaded as "mf205". Save this file as "State Motor-Fuel Rates (2000-2015).xlsx"
 
@@ -212,8 +241,8 @@ The "State Names.dta" data files contains state names, abbreviations, and numeri
 
 After setting up the folders as outlined above by using "setup", you can run through the do-files in turn. 
 It is important to not run them one after another, mainly because the results of the first 
-affect the second, and the results of the second affect the third. The file discriptions are the same for both 
-2000 and 2009 (the only changes are the dates of the treatment). A note of caution - the 2009 policy is only applicable 
+affect the second, and the results of the second affect the third. The file descriptions are the same for both 
+2000 and 2010 (the only changes are the dates of the treatment). A note of caution - the 2009 policy is only applicable 
 to the synthetic control method if you find no effect of the policy shock of 2000. 
 
 ##### "synth_setup.do"
@@ -223,7 +252,7 @@ allows you to run cleanly through the later do-files without concern for mixing 
 
 ##### "powertest.do"
 
-Before using the synthetic control method on our dataset, it is important to make sure that it (the method) could actually detect some standard shock - in essense, is there enough "power" in the combination of model and data to detect an effect. We select an effect size from the existing literature (Wagoner et al (2015) found a 26 percent reduction in alchohol motor vehicle fatalities in IL) and use the Monte Carlo method to determine if - when we simulate both a null effect of that policy and a 26% effect of that policy - our methodology and data can detect the difference. We first establish a benchmark by calculating 1,000 Monte Carlo simulations in which there is no treatment. In each iteration of the Monte Carlo a simulated state is created such that the share of auto fatalities in each year is the average from the donor pool plus two zero mean random variables: S(t) = d(t) + u(i) + e(it), where S(t) is the share in the simulated state in year t, d(t) is the average share in the donor pool in year t, u(i) is the fixed effect from a randomly drawn state and e(it) is a normally distributed error term with zero mean and the same standard deviation as the residual in the two-way fixed effect model. A synthetic control for the simulated state is then created using all lags of the outcome variable in the pre-treatment period. Finally, for each simulation the ratio of the post-treatment RMSPE to pre-treatment RMSPE is calculated. We then repeat the process on an additional 1,000 simulations, but create a treatment effect equal to the 26 percent decline found in Wagoner et al (2015) by multiplying the share of auto fatalities linked to alcohol in the post-treatment years by 0.74.
+Before using the synthetic control method on our dataset, it is important to make sure that it (the method) could detect some standard shock - in essence, is there enough "power" in the combination of model and data to detect an effect. We select an effect size from the existing literature (Wagoner et al (2015) found a 26 percent reduction in alcohol motor vehicle fatalities in IL) and use the Monte Carlo method to determine if - when we simulate both a null effect of that policy and a 26% effect of that policy - our methodology and data can detect the difference. We first establish a benchmark by calculating 1,000 Monte Carlo simulations in which there is no treatment. In each iteration of the Monte Carlo a simulated state is created such that the share of auto fatalities in each year is the average from the donor pool plus two zero mean random variables: S(t) = d(t) + u(i) + e(it), where S(t) is the share in the simulated state in year t, d(t) is the average share in the donor pool in year t, u(i) is the fixed effect from a randomly drawn state and e(it) is a normally distributed error term with zero mean and the same standard deviation as the residual in the two-way fixed effect model. A synthetic control for the simulated state is then created using all lags of the outcome variable in the pre-treatment period. Finally, for each simulation the ratio of the post-treatment RMSPE to pre-treatment RMSPE is calculated. We then repeat the process on an additional 1,000 simulations, but create a treatment effect equal to the 26 percent decline found in Wagoner et al (2015) by multiplying the share of auto fatalities linked to alcohol in the post-treatment years by 0.74.
 
 We examine power by following Abadie et al (2015) in calculating the post-treatment MSPE. We explore the power of the synthetic control method in this application by comparing the distributions of the MSPE calculated from the null and treatment simulations.  
 
@@ -231,16 +260,16 @@ We examine power by following Abadie et al (2015) in calculating the post-treatm
 
 This do-file has two main parts. First, it takes the “alcohol.dta” dataset and transforms it into four files, 
 two for each version of the model we will be running. For both tax shocks, there will be two versions 
-of the model, one for each dependent variable: share_alcohol and drivers_alcohol) For each
+of the model, one for each dependent variable: share_alcohol and drivers_alcohol. For each
 of these dependent variables, we run the model over our set of donor states, which is all 50 states plus DC minus states 
 with large liquor tax changes, states with liquor control as opposed to or in addition to taxes, and Alaska, DC, and Hawaii. 
-For sensitivity analysis we also will re-run the models over a second set of donor states where we add back in states with 
+For sensitivity analysis, we also will re-run the models over a second set of donor states where we add back in states with 
 liquor control boards.
 
 Second, it creates a set of pre-estimation figures and tables for each of the two versions of the model (and the sensitivity 
 tests). We estimate each version on two donor pools (the larger pool is part of a sensitivity analysis described below). It 
-shows the average for all the variables in that particular model by state for 1982 – 1998 and the average of all the variables 
-across time for Illinois. It then creates a bar graph showing the average for all the variables in that particular model by 
+shows the average for all the variables in that model by state for 1982 – 1998 and the average of all the variables 
+across time for Illinois. It then creates a bar graph showing the average for all the variables in that model by 
 state for 1982 – 1998, to allow us to look for outliers, and situations where IL is an outlier (if that is the case that 
 variable should not be used in this model). Finally, it plots the dependent variable of the model for IL and the US in the 
 pre-treatment period (1982-1998), and from this figure we can determine which lagged values of the dependent are appropriate 
@@ -249,7 +278,7 @@ to include in our model.
 Note: This file will only work if you have the file paths correctly assigned.
 
 Note: This file is organized without loops, mainly due to the need to label figures properly. This means if you do make any 
-major changes, you will have to check 8 places – 4 models * 2 sections. 
+major changes, you must check 8 places – 4 models * 2 sections. 
 
 
 ##### “synth_model_2000.do” and “synth_model_2010.do”
@@ -266,18 +295,18 @@ in the do-file. If you run the pre-estimation tests and decide on a different se
 those years (not a local).
 
 Note: This file loops over the four model/donor pool combinations, so to change the variables or states in the model you 
-simply have to change the locals listed at the top.
+simply must change the locals listed at the top.
 
-Note: The donor states actually used in each version of the model and their weights are captured in a dataset at the end of 
+Note: The donor states used in each version of the model and their weights are captured in a dataset at the end of 
 this do-file. 
 
-Note: We use the placebo test section of this code to check for an effect using an alternative pre-treatment period for the 2000 drivers model. In essence, we detect a potential effect of the tax change if we restrict the pre-treatment period to 1990-1998 (as opposed to 1982-1998) so we run the placebo tests on the narrow and controls donor pools, using a file called "synth_placebo_pretreatment.do" which is attached. 
+Note: We use the placebo test section of this code to check for an effect using an alternative pre-treatment period for the 2000 drivers model. We detect a potential effect of the tax change if we restrict the pre-treatment period to 1990-1998 (as opposed to 1982-1998) so we run the placebo tests on the narrow and controls donor pools, using a file called "synth_placebo_pretreatment.do" which is attached. 
 
 ##### “synth_postestimation_2000.do” and “synth_postestimation_2010.do”
 
 This do-file is the third of three. This file takes the datasets created in synth_preestimation and runs through a series 
 of post-estimation tests for each version of the data. The tests are as follows. First, we vary the lags used in the model 
-to determine if the results are sensitive to the chosen lags. Second, we vary the pre-intervention time period to determine 
+to determine if the results are sensitive to the chosen lags. Second, we vary the pre-intervention period to determine 
 if the results are sensitive to the starting point of our data. Third, we test the importance of each state used in the 
 synthetic Illinois by sequentially drop each donor state selected by the synth code. Finally, to test the possibility that 
 our results are due to a small number of potential donor states we enlarge the donor pool by including states with liquor 
@@ -289,6 +318,32 @@ simply have to change the locals listed at the top.
 
 ##### "Analysis_*depvar_donorpool*.xlsx"
 
-These excel files are set up to recieve output directly from "synth_model.dta" and "synth_postestimation.dta". There are 8 files, one each for the combination of tax increase year (1999 and 2009)(Note that we use the first full year of the tax increase as the first year of the effect, so the labeling follows 2000 and 2010), the dependent variable (share or driver) and the size of the donor pool (narrow or controls). Each is set up to produce figures for the following: All-lags sythetic control model, selected lags and predictor variable synthetic control model, placebo test with all-lags model, placebo test with selected lags and predictor model, alternative lag test, alternative pre-treatment period test, and leave-one-out test. Some notes: there are some labels and cells that need to be adjusted model to model (sorting correclty and expanding selections for figures as the number of donor state's change, for example. Moving from 2000 to 2009 means adjusting the language slightly, and most importantly, changing the area selected for calculating the RMSE of the pre-treatment period for the placebo tests. 
+These excel files are set up to receive output directly from "synth_model.dta" and "synth_postestimation.dta". There are 8 files, one each for the combination of tax increase year (1999 and 2009) (Note that we use the first full year of the tax increase as the first year of the effect, so the labeling follows 2000 and 2010), the dependent variable (share or driver) and the size of the donor pool (narrow or controls). Each is set up to produce figures for the following: All-lags sythetic control model, selected lags and predictor variable synthetic control model, placebo test with all-lags model, placebo test with selected lags and predictor model, alternative lag test, alternative pre-treatment period test, and leave-one-out test. Some notes: there are some labels and cells that need to be adjusted model to model (sorting correclty and expanding selections for figures as the number of donor state's change, for example. Moving from 2000 to 2009 means adjusting the language slightly, and most importantly, changing the area selected for calculating the RMSE of the pre-treatment period for the placebo tests. 
+
+
+#### Other Folders
+
+##### old material
+
+This folder holds previous versions of the code, and has not been used to create the results used in any version of this paper. 
+
+##### result files
+
+This folder holds the most recent version of the excel files that are populated by the code above. They are used to produce the tables and figures for this project. 
+
+##### full previous runs
+
+This folder has zip files with compressed versions of previous runs, including the August 16th version that is used in this project.
+
+##### tables and figures - tpc publications
+
+This folder holds the excel files with the formatted tables and figures used in the TPC paper. 
+
+##### tables and figures - jhe submission
+
+This folder holds the two excel files for the Journal of Health Economics submission. The first is an excel file with the ten tables and figures in the paper itself, and the second is the online appendix. 
+
+
+
 
 

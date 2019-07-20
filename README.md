@@ -24,13 +24,21 @@ An additional study is preformed that tests the effect of the policy using the s
 
 * data
   * alcohol.dta
+  * alcohol_21plus.dta
+  * alcohol_bac01.dta
   * alcohol_noborders.dta
+  * alcohol_noborders_21plus.dta
+  * alcohol_nobordersbac01.dta
   * State Names.dta
-  * counties.dta
+  * counties.dta		
 * dataset construction 
   * Dataset Construction - Setup.do
   * Dataset Construction - Master.do
+  * Dataset Construction - Master - Age Restricted.do
+  * Dataset Construction - Master - New BAC.do
   * Dataset Construction - FARS.do
+  * Dataset Construction - FARS (21plus).do    
+  * Dataset Construction - FARS - BAC 01.do
   * Dataset Construction - BEA.do
   * Dataset Construction - CDC Age.do
   * Dataset Construction - CDC Disease.do
@@ -38,39 +46,27 @@ An additional study is preformed that tests the effect of the policy using the s
   * Dataset Construction - FHWA Gas Tax.do
   * Dataset Construction - PCE Deflator.do
   * Dataset Construction - SEM Unemployment.do
-* full previous runs
-  * Synth 2000 Run 05.12.2017 (zip)
-  * Synth 2009 Run 05.12.2017 (zip)
-  * Synth Run 08.16.2017 (zip)
-* model
-  * synth_setup.do
-  * powertest.do
-  * synth_preestimation_2000.do
-  * synth_preestimation_2010.do
-  * synth_model_2000.do
-  * synth_model_2010.do
-  * synth_postestimation_2000.do
-  * synth_postestimation_2000.do
-* old material
-  * Alt Pre-Treatment Placebo Test
-  * Analysis_Drivers
-  * Analysis_Share
-  * synth_placebo_pretreatment
-  * synth_model_2009
-  * synth_postestimation_2009
-  * synth_preestimation_2009
-* result files
-  * Analysis_drivers_controls_2000.xlsx
-  * Analysis_drivers_controls_2010.xlsx
-  * Analysis_drivers_narrow_2000.xlsx
-  * Analysis_drivers_narrow_2010.xlsx
-  * Analysis_share_controls_2000.xlsx
-  * Analysis_share_controls_2010.xlsx
-  * Analysis_share_narrow_2000.xlsx
-  * Analysis_share_narrow_2010.xlsx
-* tables and figures - jhe submission
-  * Do alcohol taxes reduce motor vehicle fatalities - Appendix.xlsx
-  * Do alcohol taxes reduce motor vehicle fatalities - Tables and Figures.xlsx
+* model 
+  * Note: All the models have the same code set-up, except that powertest.do is only run in the base case. 
+  * synth_base_run
+  	* synth_setup.do
+	* master.do
+  	* powertest.do
+  	* synth_preestimation_2000.do
+  	* synth_preestimation_2010.do
+  	* synth_model_2000.do
+  	* synth_model_2010.do
+  	* synth_postestimation_2000.do
+ 	* synth_postestimation_2000.do
+  * synth_21_run
+  * synth_0.1BAC_run
+  * synth_base_noborder_run
+  * synth_21_noborder_run
+  * synth_0.1BAC_noborder_run	
+* results-submission
+  * archive_final_results.zip
+* tables-and-figures-submission
+  * Tables and Figures.xlsx
 * tables and figures - tpc publications
   * Do alcohol excise taxes reduce motor vehicle fatalities - Tables, Figures, and Appendixes
 
@@ -89,7 +85,8 @@ The do files and data files attached will be placed in one of two folders you wi
   * Gas Taxes (FHWA)
   * PCE Deflator (BEA)
   * Unemployment (SEM)
-* Synth 
+* Synth (one for each of the combinations of interest)
+  * "master.do"
   * "synth_setup.do"
   * "synth_preestimation_2000.do"
   * "synth_preestimation_2010.do"
@@ -98,14 +95,11 @@ The do files and data files attached will be placed in one of two folders you wi
   * “synth_postestimation_2000.do”
   * “synth_postestimation_2010.do”
   * "powertest.do"
-  * “alcohol.dta”
-  * "alcohol_noborders.dta"
-  * "Analysis_*depvar_donorpool*.xlsx" (There will be eight of these, one for each combination) 
-  * IL *year* - *depvar* - *donorpool* (There will be eight of these, one for each combination)
-    * preestimation tests
-    * placebo tests
-    * postestimation tests
-  
+  * Logs
+  * Data
+  	* “alcohol.dta” (or similar dataset)
+  * "Analysis_*depvar_donorpool_2010.xlsx" 
+  * "Analysis_*depvar_donorpool_2000.xlsx" 
 
 #### Dataset Construction Do-Files
 
@@ -318,30 +312,7 @@ simply have to change the locals listed at the top.
 
 ##### "Analysis_*depvar_donorpool*.xlsx"
 
-These excel files are set up to receive output directly from "synth_model.dta" and "synth_postestimation.dta". There are 8 files, one each for the combination of tax increase year (1999 and 2009) (Note that we use the first full year of the tax increase as the first year of the effect, so the labeling follows 2000 and 2010), the dependent variable (share or driver) and the size of the donor pool (narrow or controls). Each is set up to produce figures for the following: All-lags sythetic control model, selected lags and predictor variable synthetic control model, placebo test with all-lags model, placebo test with selected lags and predictor model, alternative lag test, alternative pre-treatment period test, and leave-one-out test. Some notes: there are some labels and cells that need to be adjusted model to model (sorting correclty and expanding selections for figures as the number of donor state's change, for example. Moving from 2000 to 2009 means adjusting the language slightly, and most importantly, changing the area selected for calculating the RMSE of the pre-treatment period for the placebo tests. 
-
-
-#### Other Folders
-
-##### old material
-
-This folder holds previous versions of the code, and has not been used to create the results used in any version of this paper. 
-
-##### result files
-
-This folder holds the most recent version of the excel files that are populated by the code above. They are used to produce the tables and figures for this project. 
-
-##### full previous runs
-
-This folder has zip files with compressed versions of previous runs, including the August 16th version that is used in this project.
-
-##### tables and figures - tpc publications
-
-This folder holds the excel files with the formatted tables and figures used in the TPC paper. 
-
-##### tables and figures - jhe submission
-
-This folder holds the two excel files for the Journal of Health Economics submission. The first is an excel file with the ten tables and figures in the paper itself, and the second is the online appendix. 
+These excel files are set up to receive output directly from "synth_model.dta" and "synth_postestimation.dta". There are 2 files in our final output, one each for 2000 and 2010. Each is set up to produce figures for the following: All-lags sythetic control model, selected lags and predictor variable synthetic control model, placebo test with all-lags model, placebo test with selected lags and predictor model, alternative lag test, alternative pre-treatment period test, and leave-one-out test. Some notes: there are some labels and cells that need to be adjusted model to model (sorting correclty and expanding selections for figures as the number of donor state's change, for example). Moving from 2000 to 2009 means adjusting the language slightly, and most importantly, changing the area selected for calculating the RMSE of the pre-treatment period for the placebo tests. 
 
 
 

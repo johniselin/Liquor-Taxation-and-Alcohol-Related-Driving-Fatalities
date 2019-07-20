@@ -1,8 +1,8 @@
 ### Liquor-Taxation-and-Alcohol-Related-Driving-Fatalities
 ### Robert McClelland and John Iselin
 
-In this research, we will examine the effects of two separate increases in Illinois’ excise tax on liquor, one increase in July 
-1999 and a second increase in September 2009 on fatal alcohol-related motor vehicle crashes (FARMVC). This read-me file explains both the construction 
+In this research, we examine the effects of two separate increases in Illinois’ alcohol excise tax (one increase in July 
+1999 and a second increase in September 2009) on fatal alcohol-related motor vehicle crashes (FARMVCs). This read-me file explains both the construction 
 of the dataset, we will use and how we will estimate our model. Specifically, it will walk users through the file layout, downloading 
 of related data, and use of two sets of Stata do-files. 
 
